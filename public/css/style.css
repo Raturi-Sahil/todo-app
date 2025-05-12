@@ -1,3 +1,14 @@
+/* Importing google fonts - Montserrat */
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&family=Roboto:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
 
 body{
     height: 96vh;
@@ -5,32 +16,42 @@ body{
     justify-content: center;
     align-items: center;
 }
-.signup-container {
-    display: block;
+
+:where(.signup-container, .signin-container, .todo-container) {
+    display: none;
     height: 50vh;
     width: 50vh;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 6px 20px rgba(0, 0, 0, 0.1);
-    transition: 0.3 ease-in;
+    transition: all 0.3s ease-in;
 }
 
-#signup-container:hover {
+.signup-container {
+    display: block;
+}
+
+.signin-container {
+    display: none;
+}
+
+.signup-container:hover, .signin-container:hover, .todo-container {
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 12px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+      transition: 0.3s ease-in-out;
 }
 
-#signup-container-inner {
+.signup-container-inner, .signin-container-inner, .todo-container.inner {
 
     border: 1px solid black;
     border-radius: 10px;
     
-    height: 89%;
-    width: 89%;
+    height: 100%;
+    width: 100%;
     padding: 20px;
     background-color: lightblue;
     
 }
 
-.signup-input-wrapper {
+.signup-input-wrapper, .signin-input-wrapper {
     height: 10%;
     width: 100%;
     margin-bottom: 20px;
@@ -42,20 +63,20 @@ body{
     background-color: white;
 
 }
-.signup-input-wrapper:focus-within {
+.signup-input-wrapper:focus-within, .signin-input-wrapper:focus-within {
     outline: 1px solid white;
     outline-offset: 2px;
     
 }
-#signup-container-inner #signup-text {
-    font-weight: 1000;
+.signup-container-inner .signup-text, .signin-container-inner .signin-text {
+    font-weight: 600;
     font-size: 30px;
     margin: 10px 0px 30px 4px;
     
 }
 
-#signup-container-inner .head{
-    font-weight: 1000;
+.signup-container-inner .head, .signin-container-inner .head{
+    font-weight: 500;
     font-size: 20px;
     margin: 2px 4px;
     
@@ -63,7 +84,7 @@ body{
 
 
 
-.signup-input-wrapper input {
+.signup-input-wrapper input, .signin-input-wrapper input {
     height: 90%;
     border-radius: 20px;
     flex: 1;
@@ -72,16 +93,16 @@ body{
 }
 
 
-#button {
+.button {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 40px;
-    width: 90%;
+    margin-top: 20px;
+    width: 100%;
     height: 12%;
 }
 
-#button button {
+.button button {
     height: 100%;
     width: 40%;
     border-radius: 10px;
@@ -89,11 +110,26 @@ body{
     background-color: white;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 6px 20px rgba(0, 0, 0, 0.1);
     border-color: rgb(33, 32, 32);
+    transition: 0.3s ease-in-out;
 }
 
-#button button:hover {
-    background-color: rgb(237, 237, 124);
+.button button:hover {
+    background-color: rgb(236, 225, 212);
     outline: 1px solid white;
+    
     border: none;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.switchUser {
+    text-align: center;
+}
+.switchUser span {
+    text-decoration: underline;
+}
+.switchUser span:hover {
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
 }
 
