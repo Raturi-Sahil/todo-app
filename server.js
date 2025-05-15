@@ -17,6 +17,7 @@ app.get('/', function(req, res) {
 });
 
 function auth(req, res, next) {
+    // console.log("inside the auth");
     try {
       const token = req.headers.token;
       if(token) {
@@ -46,7 +47,7 @@ function auth(req, res, next) {
 
 app.post('/sign-up', function(req, res) {
     
-    console.log("Inside the signup endpoint");
+    // console.log("Inside the signup endpoint");
     const username = req.body.username;
     const password = req.body.password;
 
@@ -71,7 +72,7 @@ app.post('/sign-up', function(req, res) {
 
 app.post('/sign-in', function(req, res){
 
-    console.log("Inside the signin endpoint");
+    // console.log("Inside the signin endpoint");
     console.log(users);
     const username = req.body.username;
     const password = req.body.password;
@@ -90,7 +91,7 @@ app.post('/sign-in', function(req, res){
     } else {
         res.send({
             msg: "Invalid username or password"
-        })
+        });
     }
 });
 
@@ -98,6 +99,7 @@ app.use(auth);
 
 
 app.post('/add-todo', function(req, res) {
+    // console.log("inside the add-todo");
     try {
         const user = users.find(u=> u.username === req.username);
         const task = req.body.task;
@@ -105,29 +107,47 @@ app.post('/add-todo', function(req, res) {
         user.todos.push({id: `${len}`, task: task, completed: false});
         res.send({
             msg: "Todo successfully added"
-        })
+        });
     } catch(error) {
         console.error(error);
         res.status(500).send({msg: "An error occured while adding the todo."});
     }
 })
 
-app.post('/delete-todo', function(req, res) {
+
+app.post('/update-todo', function(req, res){
+    // console.log("inside the update-todo");
     try {
         const user = users.find(u=> u.username === req.username);
-        const task = req.body.task;
-        const len = user.todos.length;
-        user.todos.push({id: `${len}`, task: task, completed: false});
+        const todo = user.todos.find(u => u.id == req.body.id);
+        todo.task = req.body.task;
         res.send({
-            msg: "Todo successfully added"
-        })
+            msg: "Todo has been updated successfully"
+        });
     } catch(error) {
         console.error(error);
-        res.status(500).send({msg: "An error occured while adding the todo."});
+        res.status(500).send({msg: "An error occured while updating the todo."});
     }
 });
 
+// app.post('/delete-todo', function(req, res) {
+//     //to be implemented tomorrow.
+//     try {
+//         const user = users.find(u=> u.username === req.username);
+//         const task = req.body.task;
+//         const len = user.todos.length;
+//         user.todos.push({id: `${len}`, task: task, completed: false});
+//         res.send({
+//             msg: "Todo successfully added"
+//         })
+//     } catch(error) {
+//         console.error(error);
+//         res.status(500).send({msg: "An error occured while adding the todo."});
+//     }
+// });
+
 app.get('/me', function(req, res) {
+    // console.log("inside the me endpoint");
     try {
         const user = users.find(u=> u.username === req.username);
         res.json({

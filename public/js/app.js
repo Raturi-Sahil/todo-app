@@ -2,6 +2,7 @@ const todoContainer = document.querySelector(".todo-container");
 const signInBtn = document.querySelector(".signin-container-inner .button button");
 const todoList = todoContainer.querySelector(".todo-list .list-items");
 
+
 async function signup() {
 
     const input = document.querySelectorAll(".signup-input-wrapper input");
@@ -30,7 +31,59 @@ async function signup() {
 
 }
 
-async function getTodos() {
+function taskCompleted(e) {
+    console.log("checkbox clicked");
+    const checkbox = e.target;
+    const p = checkbox.nextElementSibling;
+    p.classList.toggle("strikethrough", checkbox.checked);
+}
+
+function editTodo(e) {
+    const parent = e.target.parentElement;
+    
+    if(parent.querySelectorAll("input")[1]) return;
+    console.log(parent);
+    const p = parent.querySelector(".todo-content");
+
+    if(p) {
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = p.textContent;
+    input.className = p.className;
+
+    //replace p with input. 
+    parent.replaceChild(input, p);
+
+    input.addEventListener("keydown", async function(e) {
+        if(e.key == "Enter") {
+            const newP = document.createElement("p");
+            newP.textContent = input.value;
+            newP.className = input.className;
+            parent.replaceChild(newP, input);
+
+            const token = localStorage.getItem("token");
+            const response = await axios.post('/update-todo', {
+                task: newP.textContent,
+                id: parent.id
+            },{
+                headers: {
+                    token: token
+                }
+            });
+        }   
+    });
+    }
+}
+
+
+function deleteTodo() {
+
+}
+
+
+// This function renders the todos. 
+async function renderTodos() {
     try {
         const token = localStorage.getItem("token");
 
@@ -39,6 +92,9 @@ async function getTodos() {
                 token: token
             }
         });
+
+        todoList.innerHTML = ""; // Clear old list
+
         const arr = response.data.todos;
         if(arr && arr.length > 0) {
                     arr.forEach(element => {
@@ -47,14 +103,19 @@ async function getTodos() {
                     li.id = element.id;
                     const input = document.createElement("input");
                     input.setAttribute("type", "checkbox");
+                    //for evenlisteners we just pass the function as a reference.
+                    input.addEventListener('change', taskCompleted);
                     const p = document.createElement("p");
                     p.textContent = element.task;
+                    p.classList.add("todo-content");
                     const span1 = document.createElement("span");
                     const span2 = document.createElement("span");
                     span1.className = "material-symbols-rounded";
                     span1.textContent = "edit";
+                    span1.addEventListener('click', editTodo);
                     span2.className = "material-symbols-rounded";
                     span2.textContent = "delete_forever";
+                    span2.addEventListener('click', deleteTodo);
                     const children = [input, p, span1, span2];
                     children.forEach(child => li.appendChild(child));
                     todoList.appendChild(li);
@@ -90,7 +151,7 @@ signInBtn.addEventListener('click', async function() {
             document.querySelector(".signin-container").style.display = "none";
             document.querySelector(".todo-container").style.display = "block";
 
-            await getTodos();
+            await renderTodos();
         }
     } catch(error) {
         console.error("Sign in failed: ", error);
@@ -109,8 +170,11 @@ function signinToSignup(){
         document.querySelector(".signup-container").style.display = "block";
 }
 
+
+// Add the todo to list-items.
 document.querySelector(".todo-add button").addEventListener('click', async() => {
     const todo = document.querySelector(".todo-add input").value;
+    if(!todo) return;
         try {
             const token = localStorage.getItem("token");
             const response = await axios.post('/add-todo', {
@@ -123,11 +187,13 @@ document.querySelector(".todo-add button").addEventListener('click', async() => 
             // Gotta clear the element and not the input take above i.e. todo.
             document.querySelector(".todo-add input").value = "";
 
-            //Render the new added todo
-            await getTodos();
+            //Render the new added todo along with the already existing ones. 
+            await renderTodos();
 
         } catch(error) {
             console.error("Error fetching data: ", error);
         }
+
 })
+
 

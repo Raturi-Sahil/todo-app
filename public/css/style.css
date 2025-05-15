@@ -227,7 +227,7 @@ body{
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-.list-item p {
+.list-item .todo-content {
     width: 100%;
     margin-left: 2%;
     font-size: 1.5rem;
@@ -243,6 +243,8 @@ body{
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1), 0px 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-
-
+/*This adds a strikethrough between the text*/
+.strikethrough {
+    text-decoration: line-through;
+}
 
