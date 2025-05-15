@@ -77,8 +77,19 @@ function editTodo(e) {
 }
 
 
-function deleteTodo() {
+async function deleteTodo(e) {
+    console.log("inside the delete todo function in app.js");
+    const parent = e.target.parentElement;
 
+    await axios.post('/delete-todo', {
+        id: parent.id
+    }, {
+        headers: {
+            token: localStorage.getItem("token")
+        }
+    });
+
+    todoList.removeChild(parent);
 }
 
 

@@ -130,21 +130,20 @@ app.post('/update-todo', function(req, res){
     }
 });
 
-// app.post('/delete-todo', function(req, res) {
-//     //to be implemented tomorrow.
-//     try {
-//         const user = users.find(u=> u.username === req.username);
-//         const task = req.body.task;
-//         const len = user.todos.length;
-//         user.todos.push({id: `${len}`, task: task, completed: false});
-//         res.send({
-//             msg: "Todo successfully added"
-//         })
-//     } catch(error) {
-//         console.error(error);
-//         res.status(500).send({msg: "An error occured while adding the todo."});
-//     }
-// });
+app.post('/delete-todo', function(req, res) {
+    console.log("inside the delete todo route handler.")
+    try {
+        const user = users.find(u=> u.username === req.username);
+        const index = user.todos.findIndex(u => u.id === req.body.id);
+        user.todos.splice(index, 1);
+        res.send({
+            msg: "Todo deleted successfully"
+        })
+    } catch(error) {
+        console.error(error);
+        res.status(500).send({msg: "An error occured while deleting the todo."});
+    }
+});
 
 app.get('/me', function(req, res) {
     // console.log("inside the me endpoint");
@@ -154,7 +153,8 @@ app.get('/me', function(req, res) {
             todos: user.todos
         })
     }catch(error) {
-
+        console.error(error);
+        res.status(500).send({msg: "An error occured while fetching the todo."});
     }
 });
 
