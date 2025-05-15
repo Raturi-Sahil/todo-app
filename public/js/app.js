@@ -1,6 +1,9 @@
 const todoContainer = document.querySelector(".todo-container");
 const signInBtn = document.querySelector(".signin-container-inner .button button");
 const todoList = todoContainer.querySelector(".todo-list .list-items");
+const addTodoBtn = document.querySelector(".todo-add button");
+const inputTodo = document.querySelector(".todo-add input");
+let isEditing = false;
 
 
 async function signup() {
@@ -39,11 +42,16 @@ function taskCompleted(e) {
 }
 
 function editTodo(e) {
+    if(isEditing) return; 
+    isEditing = true;
+
     const parent = e.target.parentElement;
     
     if(parent.querySelectorAll("input")[1]) return;
     console.log(parent);
+
     const p = parent.querySelector(".todo-content");
+    
 
     if(p) {
 
@@ -54,25 +62,50 @@ function editTodo(e) {
 
     //replace p with input. 
     parent.replaceChild(input, p);
+    input.focus();
 
-    input.addEventListener("keydown", async function(e) {
+    
+
+    input.addEventListener("keydown", function(e) {
         if(e.key == "Enter") {
-            const newP = document.createElement("p");
-            newP.textContent = input.value;
-            newP.className = input.className;
-            parent.replaceChild(newP, input);
-
-            const token = localStorage.getItem("token");
-            const response = await axios.post('/update-todo', {
-                task: newP.textContent,
-                id: parent.id
-            },{
-                headers: {
-                    token: token
-                }
-            });
+            updateHandler(input.value);
         }   
     });
+
+    input.addEventListener("blur", function(e) {
+            updateHandler(input.value);
+    })
+    // using this to prevent both events firing at once, cuz perssing may lead to lose of focus from the input too, cuz both events
+    // to fire at once.
+    let hasUpdated = false;
+
+    async function updateHandler(value) {
+            if(hasUpdated) return;
+            hasUpdated = true;
+
+            const newP = document.createElement("p");
+            newP.textContent = value;
+            newP.className = input.className;
+            parent.replaceChild(newP, input);
+            isEditing = false;
+
+            if(value.trim()) {
+                try {
+                    const token = localStorage.getItem("token");
+                    const response = await axios.post('/update-todo', {
+                        task: newP.textContent,
+                        id: parent.id
+                    },{
+                        headers: {
+                            token: token
+                        }
+                    });
+                } catch(error) {
+                    console.error("Error: ", error);
+                }
+            }
+    }
+
     }
 }
 
@@ -183,9 +216,12 @@ function signinToSignup(){
 
 
 // Add the todo to list-items.
-document.querySelector(".todo-add button").addEventListener('click', async() => {
-    const todo = document.querySelector(".todo-add input").value;
+async function addTodo() {
+
+    const todo = inputTodo.value.trim();
+
     if(!todo) return;
+
         try {
             const token = localStorage.getItem("token");
             const response = await axios.post('/add-todo', {
@@ -205,6 +241,15 @@ document.querySelector(".todo-add button").addEventListener('click', async() => 
             console.error("Error fetching data: ", error);
         }
 
-})
+}
+
+addTodoBtn.addEventListener("click", addTodo);
+
+inputTodo.addEventListener("keydown", function(e) {
+    if(e.key === "Enter")
+        addTodo();
+});
+
+
 
 

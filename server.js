@@ -40,9 +40,6 @@ function auth(req, res, next) {
         res.status(500).json({ msg: "An error occurred while fetching the todos." });
     }
     
-
-  
-
 }
 
 app.post('/sign-up', function(req, res) {
