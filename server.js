@@ -37,7 +37,7 @@ function auth(req, res, next) {
         }
     }catch(error) {
         console.error(error);
-        res.status(500).json({ msg: "An error occurred while fetching the todos." });
+        res.status(500).json({ msg: "An error occurred while fetching the todos." });  
     }
     
 }

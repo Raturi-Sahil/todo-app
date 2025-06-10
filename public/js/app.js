@@ -203,14 +203,16 @@ signInBtn.addEventListener('click', async function() {
 })
 
 function signupToSignin() {
-
-        document.querySelector(".signup-container").style.display = "none";
+        const signup = document.querySelector(".signup-container");
+        signup.querySelectorAll("input").forEach(input => input.value = "");
+        signup.style.display = "none";
         document.querySelector(".signin-container").style.display = "block";
 }
 
 function signinToSignup(){
-
-        document.querySelector(".signin-container").style.display = "none";
+        const signin = document.querySelector(".signin-container");
+        signin.querySelectorAll("input").forEach(input => input.value = "");
+        signin.style.display = "none";
         document.querySelector(".signup-container").style.display = "block";
 }
 
